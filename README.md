@@ -42,7 +42,7 @@ pip install -r requirements.txt
 To finally utilize this program, run:
 
 ```
-python main.py
+python run.py
 ```
 
 You will have the option to put a American zipcode you desire, as well as to pick how far you would like to go back to the addresses sold in the past.
