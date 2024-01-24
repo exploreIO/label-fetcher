@@ -27,7 +27,7 @@ class Scraper:
                     response = s.get(url)
                     if response.status_code == 200:
                         soup = BeautifulSoup(response.text, 'html.parser')
-                        page_addresses = soup.find_all('div', class_=['homeAddressV2', 'bp-Homecard__Address'])
+                        page_addresses = soup.find_all('div', class_='link-and-anchor')
                         if not page_addresses:
                             break
                         addresses.extend(page_addresses)
