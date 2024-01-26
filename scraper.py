@@ -16,29 +16,33 @@ class Scraper:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
         }
 
-    def scrape(self):
-        addresses = []
-        page_number = 1
+    def get_page_addresses(self, url):
         with requests.Session() as s:
             s.headers.update(self.headers)
-            while True:
-                url = f"{self.base_url}/page-{page_number}"
-                try:
-                    response = s.get(url)
-                    if response.status_code == 200:
-                        soup = BeautifulSoup(response.text, 'html.parser')
-                        page_addresses = soup.find_all('div', class_='link-and-anchor')
-                        if not page_addresses:
-                            break
-                        addresses.extend(page_addresses)
-                        properties = [Property(address.text.strip()) for address in page_addresses]
-                        for property in properties:
-                            print(property.address)
-                        page_number += 1
-                    else:
-                        print(f"Error: {response.status_code}")
-                        break
-                except Exception as e:
-                    print(f"An error occurred: {str(e)}")
-                    break
-        return addresses
+            response = s.get(url)
+            if response.status_code != 200:
+                print(f"Error: {response.status_code}")
+                return []
+            soup = BeautifulSoup(response.text, 'html.parser')
+            return soup.find_all('div', class_='link-and-anchor')
+
+    def scrape(self):
+        addresses = set()
+        page_number = 1
+        while True:
+            url = f"{self.base_url}/page-{page_number}"
+            page_addresses = self.get_page_addresses(url)
+            if not page_addresses:
+                break
+            for page in page_addresses:
+                address = page.text.strip()
+                if self.zipcode in address:
+                    addresses.add(address)
+            self.print_addresses(addresses)
+            page_number += 1
+        return list(addresses)
+
+    def print_addresses(self, addresses):
+        properties = [Property(address) for address in addresses]
+        for property in properties:
+            print(property.address)
