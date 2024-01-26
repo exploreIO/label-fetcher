@@ -55,4 +55,4 @@ if __name__ == "__main__":
     scraper = Scraper(zipcode, time_period)
     addresses = scraper.scrape()
     print(f"Number of addresses fetched: {len(addresses)}")
-    write_addresses_to_doc(addresses, 'ter.docx', 'output.docx')
+    write_addresses_to_doc(addresses, 'temp.docx', 'output.docx')
