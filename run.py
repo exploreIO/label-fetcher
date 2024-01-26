@@ -1,3 +1,5 @@
+from docx import Document
+
 from scraper import Scraper
 
 
@@ -35,9 +37,22 @@ def get_user_input():
                     print("Error: Invalid option. Please enter a number from 1 to 8.")
 
 
+def write_addresses_to_doc(addresses, template, output):
+    doc = Document(template)
+    table = doc.tables[0]  # assuming the table is the first one in the document
+    for i, row in enumerate(table.rows):
+        if i >= len(addresses):  # If i is not less than the length of addresses, break the loop
+            break
+        for cell in row.cells:
+            if 'ADDRESS_PLACEHOLDER' in cell.text:
+                address = str(addresses[i].get_text()) if addresses[i] else ''
+                cell.text = cell.text.replace('ADDRESS_PLACEHOLDER', address)
+    doc.save(output)
+
 
 if __name__ == "__main__":
     zipcode, time_period = get_user_input()
     scraper = Scraper(zipcode, time_period)
     addresses = scraper.scrape()
     print(f"Number of addresses fetched: {len(addresses)}")
+    write_addresses_to_doc(addresses, 'ter.docx', 'output.docx')
