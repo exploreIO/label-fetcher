@@ -1,6 +1,6 @@
 # Label Fetcher
 
-This project is designed to fetch addresses from a website that were sold and transfer it into a Word Doc, therefore too label it.
+This project is designed to fetch addresses from a website that were sold and transfer it into a Word Doc, too label it.
 
 ### Prerequisits
 
